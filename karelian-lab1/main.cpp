@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-using namespace std;
+using namespace std; //мои хотелки :)
 
 struct Pipe {
     string name;
@@ -138,70 +138,32 @@ void loadFromFile(Pipe* pipes, int& pipeCount, CompressorStation* stations, int&
     inFile.close();
 }
 
+const int MAX = 100;
+
 int main() {
+    Pipe pipes[MAX];
+    int pipeCount = 0;
+    CompressorStation stations[MAX];
+    int stationCount = 0;
+
     std::cout << "Hello, user!" << std::endl;
     while (true) {
         std::cout << "Enter a number (or 0 to quit): ";
         int input;
         std::cin >> input;
 
-        if (input == 0) {
-            break;
-        }
+        if (input == 0) break;
 
         switch (input) {
-            case 1: {
-                Pipe pipes[100];
-                int pipeCount = 0;
-                addPipe(pipes, pipeCount);
-                break;
-            }
-            case 2: {
-                CompressorStation stations[100];
-                int stationCount = 0;
-                addCompressorStation(stations, stationCount);
-                break;
-            }
-            case 3: {
-                Pipe pipes[100];
-                int pipeCount = 0;
-                CompressorStation stations[100];
-                int stationCount = 0;
-                printAllObjects(pipes, pipeCount, stations, stationCount);
-                break;
-            }
-            case 4: {
-                Pipe pipes[100];
-                int pipeCount = 0;
-                redactPipe(pipes, pipeCount);
-                break;
-            }
-            case 5: {
-                CompressorStation stations[100];
-                int stationCount = 0;
-                redactCompressorStation(stations, stationCount);
-                break;
-            }
-            case 6: {
-                Pipe pipes[100];
-                int pipeCount = 0;
-                CompressorStation stations[100];
-                int stationCount = 0;
-                saveToFile(pipes, pipeCount, stations, stationCount);
-                break;
-            }
-            case 7: {
-                Pipe pipes[100];
-                int pipeCount = 0;
-                CompressorStation stations[100];
-                int stationCount = 0;
-                loadFromFile(pipes, pipeCount, stations, stationCount);
-                break;
-            }
-            default:
-                std::cout << "Invalid input. Please try again." << std::endl;
+            case 1: addPipe(pipes, pipeCount); break;
+            case 2: addCompressorStation(stations, stationCount); break;
+            case 3: printAllObjects(pipes, pipeCount, stations, stationCount); break;
+            case 4: redactPipe(pipes, pipeCount); break;
+            case 5: redactCompressorStation(stations, stationCount); break;
+            case 6: saveToFile(pipes, pipeCount, stations, stationCount); break;
+            case 7: loadFromFile(pipes, pipeCount, stations, stationCount); break;
+            default: std::cout << "Invalid input\n";
         }
-
 
     }
 }
