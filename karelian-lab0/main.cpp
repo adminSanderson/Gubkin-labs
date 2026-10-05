@@ -11,5 +11,6 @@ int main() {
     if (x == 0) std::cout << "no";
     else std::cout << 10 / x;
     
+    
     return 0;
 }
