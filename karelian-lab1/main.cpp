@@ -1,6 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <string>
 using namespace std; //мои хотелки :)
 
@@ -18,133 +17,140 @@ struct CompressorStation {
     int stationClass;
 };
 
-void addPipe(Pipe* pipes, int& pipeCount) {
+void addPipe(Pipe& pipe, bool& pipeExists) {
+    if (pipeExists) {
+        std::cout << "Pipe already exists. Only one pipe allowed.\n";
+        return;
+    }
     std::cout << "Enter pipe name: ";
-    std::cin >> pipes[pipeCount].name;
+    std::cin >> pipe.name;
     std::cout << "Enter pipe length: ";
-    std::cin >> pipes[pipeCount].length;
+    std::cin >> pipe.length;
     std::cout << "Enter pipe diameter: ";
-    std::cin >> pipes[pipeCount].diameter;
-    pipes[pipeCount].underRepair = false;
-    pipeCount++;
+    std::cin >> pipe.diameter;
+    pipe.underRepair = false;
+    pipeExists = true;
 }
 
-void addCompressorStation(CompressorStation* stations, int& stationCount) {
+void addCompressorStation(CompressorStation& station, bool& stationExists) {
+    if (stationExists) {
+        std::cout << "Compressor station already exists. Only one allowed.\n";
+        return;
+    }
     std::cout << "Enter station name: ";
-    std::cin >> stations[stationCount].name;
+    std::cin >> station.name;
     std::cout << "Enter number of workshops: ";
-    std::cin >> stations[stationCount].workshopecount;
+    std::cin >> station.workshopecount;
     std::cout << "Enter number of working workshops: ";
-    std::cin >> stations[stationCount].workshopworkingcount;
+    std::cin >> station.workshopworkingcount;
     std::cout << "Enter station class: ";
-    std::cin >> stations[stationCount].stationClass;
-    stationCount++;
+    std::cin >> station.stationClass;
+    stationExists = true;
 }
 
-void printAllObjects(Pipe* pipes, int pipeCount, CompressorStation* stations, int stationCount) {
+void printAllObjects(const Pipe& pipe, bool pipeExists,
+                     const CompressorStation& station, bool stationExists) {
     std::cout << "Pipes:" << std::endl;
-    for (int i = 0; i < pipeCount; i++) {
-        std::cout << "Name: " << pipes[i].name << ", Length: " << pipes[i].length
-                  << ", Diameter: " << pipes[i].diameter
-                  << ", Under Repair: " << (pipes[i].underRepair ? "Yes" : "No") << std::endl;
+    if (pipeExists) {
+        std::cout << "Name: " << pipe.name << ", Length: " << pipe.length
+                  << ", Diameter: " << pipe.diameter
+                  << ", Under Repair: " << (pipe.underRepair ? "Yes" : "No") << std::endl;
     }
 
     std::cout << "Compressor Stations:" << std::endl;
-    for (int i = 0; i < stationCount; i++) {
-        std::cout << "Name: " << stations[i].name
-                  << ", Workshops: " << stations[i].workshopecount
-                  << ", Working Workshops: " << stations[i].workshopworkingcount
-                  << ", Class: " << stations[i].stationClass << std::endl;
+    if (stationExists) {
+        std::cout << "Name: " << station.name
+                  << ", Workshops: " << station.workshopecount
+                  << ", Working Workshops: " << station.workshopworkingcount
+                  << ", Class: " << station.stationClass << std::endl;
     }
 }
 
-void redactPipe(Pipe* pipes, int pipeCount) {
+void redactPipe(Pipe& pipe, bool pipeExists) {
+    if (!pipeExists) {
+        std::cout << "No pipe to redact.\n";
+        return;
+    }
     std::cout << "Enter the name of the pipe to redact: ";
     std::string name;
     std::cin >> name;
 
-    for (int i = 0; i < pipeCount; i++) {
-        if (pipes[i].name == name) {
-            pipes[i].underRepair = true;
-            break;
-        }
+    if (pipe.name == name) {
+        pipe.underRepair = true;
+    } else {
+        std::cout << "Pipe not found.\n";
     }
 }
 
-void redactCompressorStation(CompressorStation* stations, int stationCount) {
+void redactCompressorStation(CompressorStation& station, bool stationExists) {
+    if (!stationExists) {
+        std::cout << "No compressor station to redact.\n";
+        return;
+    }
     std::cout << "Enter the name of the compressor station to redact: ";
     std::string name;
     std::cin >> name;
 
-    for (int i = 0; i < stationCount; i++) {
-        if (stations[i].name == name) {
-            stations[i].workshopworkingcount = 0;
-            break;
-        }
+    if (station.name == name) {
+        station.workshopworkingcount = 0;
+    } else {
+        std::cout << "Station not found.\n";
     }
 }
 
-
-void saveToFile(Pipe* pipes, int pipeCount, CompressorStation* stations, int stationCount) {
+void saveToFile(const Pipe& pipe, bool pipeExists,
+                const CompressorStation& station, bool stationExists) {
     std::ofstream outFile("data.txt");
     if (!outFile) {
         std::cerr << "Error opening file for writing." << std::endl;
         return;
     }
 
-    outFile << "Pipes:" << std::endl;
-    for (int i = 0; i < pipeCount; i++) {
-        outFile << pipes[i].name << " " << pipes[i].length << " "
-                << pipes[i].diameter << " " << pipes[i].underRepair << std::endl;
+    if (pipeExists) {
+        outFile << "PIPE " << pipe.name << " " << pipe.length << " "
+                << pipe.diameter << " " << pipe.underRepair << std::endl;
     }
 
-    outFile << "Compressor Stations:" << std::endl;
-    for (int i = 0; i < stationCount; i++) {
-        outFile << stations[i].name << " " << stations[i].workshopecount
-                << " " << stations[i].workshopworkingcount
-                << " " << stations[i].stationClass << std::endl;
+    if (stationExists) {
+        outFile << "STATION " << station.name << " " << station.workshopecount
+                << " " << station.workshopworkingcount
+                << " " << station.stationClass << std::endl;
     }
 
     outFile.close();
 }
 
-void loadFromFile(Pipe* pipes, int& pipeCount, CompressorStation* stations, int& stationCount) {
+void loadFromFile(Pipe& pipe, bool& pipeExists,
+                  CompressorStation& station, bool& stationExists) {
     std::ifstream inFile("data.txt");
     if (!inFile) {
         std::cerr << "Error opening file for reading." << std::endl;
         return;
     }
 
-    std::string line;
-    while (std::getline(inFile, line)) {
-        if (line == "Pipes:") {
-            while (std::getline(inFile, line) && !line.empty()) {
-                std::istringstream iss(line);
-                iss >> pipes[pipeCount].name >> pipes[pipeCount].length
-                    >> pipes[pipeCount].diameter >> pipes[pipeCount].underRepair;
-                pipeCount++;
-            }
-        } else if (line == "Compressor Stations:") {
-            while (std::getline(inFile, line) && !line.empty()) {
-                std::istringstream iss(line);
-                iss >> stations[stationCount].name >> stations[stationCount].workshopecount
-                    >> stations[stationCount].workshopworkingcount
-                    >> stations[stationCount].stationClass;
-                stationCount++;
-            }
+    pipeExists = false;
+    stationExists = false;
+
+    std::string tag;
+    while (inFile >> tag) {
+        if (tag == "PIPE") {
+            inFile >> pipe.name >> pipe.length >> pipe.diameter >> pipe.underRepair;
+            pipeExists = true;
+        } else if (tag == "STATION") {
+            inFile >> station.name >> station.workshopecount
+                   >> station.workshopworkingcount >> station.stationClass;
+            stationExists = true;
         }
     }
 
     inFile.close();
 }
 
-const int MAX = 100;
-
 int main() {
-    Pipe pipes[MAX];
-    int pipeCount = 0;
-    CompressorStation stations[MAX];
-    int stationCount = 0;
+    Pipe pipe;
+    bool pipeExists = false;
+    CompressorStation station;
+    bool stationExists = false;
 
     std::cout << "Hello, user!" << std::endl;
     while (true) {
@@ -155,15 +161,14 @@ int main() {
         if (input == 0) break;
 
         switch (input) {
-            case 1: addPipe(pipes, pipeCount); break;
-            case 2: addCompressorStation(stations, stationCount); break;
-            case 3: printAllObjects(pipes, pipeCount, stations, stationCount); break;
-            case 4: redactPipe(pipes, pipeCount); break;
-            case 5: redactCompressorStation(stations, stationCount); break;
-            case 6: saveToFile(pipes, pipeCount, stations, stationCount); break;
-            case 7: loadFromFile(pipes, pipeCount, stations, stationCount); break;
+            case 1: addPipe(pipe, pipeExists); break;
+            case 2: addCompressorStation(station, stationExists); break;
+            case 3: printAllObjects(pipe, pipeExists, station, stationExists); break;
+            case 4: redactPipe(pipe, pipeExists); break;
+            case 5: redactCompressorStation(station, stationExists); break;
+            case 6: saveToFile(pipe, pipeExists, station, stationExists); break;
+            case 7: loadFromFile(pipe, pipeExists, station, stationExists); break;
             default: std::cout << "Invalid input\n";
         }
-
     }
 }
