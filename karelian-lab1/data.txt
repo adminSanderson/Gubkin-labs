@@ -1,3 +1,0 @@
-Pipes:
-Pipe1 10 10 0
-Compressor Stations:

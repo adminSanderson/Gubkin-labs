@@ -98,52 +98,127 @@ void redactCompressorStation(CompressorStation& station, bool stationExists) {
     }
 }
 
-void saveToFile(const Pipe& pipe, bool pipeExists,
-                const CompressorStation& station, bool stationExists) {
-    std::ofstream outFile("data.txt");
-    if (!outFile) {
+//void saveToFile(const Pipe& pipe, bool pipeExists,
+//                const CompressorStation& station, bool stationExists) {
+//   std::ofstream outFile("data.txt");
+//    if (!outFile) {
+//        std::cerr << "Error opening file for writing." << std::endl;
+//        return;
+//    }
+//
+//    if (pipeExists) {
+//        outFile << "PIPE " << pipe.name << " " << pipe.length << " "
+//                << pipe.diameter << " " << pipe.underRepair << std::endl;
+//   }
+//
+//    if (stationExists) {
+//        outFile << "STATION " << station.name << " " << station.workshopecount
+//                << " " << station.workshopworkingcount
+//                << " " << station.stationClass << std::endl;
+//    }
+//
+ //   outFile.close();
+//}
+
+void savePipeToFile(const Pipe& pipe, bool pipeExists) {
+    std::ofstream outfile("pipe.txt");
+    if (!outfile) {
         std::cerr << "Error opening file for writing." << std::endl;
         return;
     }
 
     if (pipeExists) {
-        outFile << "PIPE " << pipe.name << " " << pipe.length << " "
+        outfile << "PIPE " << pipe.name << " " << pipe.length << " "
                 << pipe.diameter << " " << pipe.underRepair << std::endl;
+    }
+    outfile.close();
+}
+
+void saveStationToFile(const CompressorStation& station, bool stationExists) {
+    std::ofstream outfile("station.txt");
+    if (!outfile) {
+        std::cerr << "Error opening file for writing." << std::endl;
+        return;
     }
 
     if (stationExists) {
-        outFile << "STATION " << station.name << " " << station.workshopecount
+        outfile << "STATION " << station.name << " " << station.workshopecount
                 << " " << station.workshopworkingcount
                 << " " << station.stationClass << std::endl;
     }
-
-    outFile.close();
+    outfile.close();
 }
 
-void loadFromFile(Pipe& pipe, bool& pipeExists,
-                  CompressorStation& station, bool& stationExists) {
-    std::ifstream inFile("data.txt");
+// void loadFromFile(Pipe& pipe, bool& pipeExists,
+//                   CompressorStation& station, bool& stationExists) {
+//     std::ifstream inFile("data.txt");
+//     if (!inFile) {
+//         std::cerr << "Error opening file for reading." << std::endl;
+//         return;
+//     }
+
+//     pipeExists = false;
+//     stationExists = false;
+
+//     std::string tag;
+//     while (inFile >> tag) {
+//         if (tag == "PIPE") {
+//             inFile >> pipe.name >> pipe.length >> pipe.diameter >> pipe.underRepair;
+//             pipeExists = true;
+//         } else if (tag == "STATION") {
+//             inFile >> station.name >> station.workshopecount
+//                    >> station.workshopworkingcount >> station.stationClass;
+//             stationExists = true;
+//         }
+//     }
+
+//     inFile.close();
+// }
+
+void loadPipeFromFile(Pipe& pipe, bool& pipeExists) {
+    std::ifstream inFile("pipe.txt");
+    if (!inFile) {
+        std::cerr << "Error opening file for reading." << std::endl;
+        return;
+    }
+    pipeExists = false;
+
+    inFile >> pipe.name >> pipe.length >> pipe.diameter >> pipe.underRepair;
+    pipeExists = true;
+
+    inFile.close();
+}
+
+void loadStationFromFile(CompressorStation& station, bool& stationExists) {
+    std::ifstream inFile("station.txt");
     if (!inFile) {
         std::cerr << "Error opening file for reading." << std::endl;
         return;
     }
 
-    pipeExists = false;
     stationExists = false;
 
-    std::string tag;
-    while (inFile >> tag) {
-        if (tag == "PIPE") {
-            inFile >> pipe.name >> pipe.length >> pipe.diameter >> pipe.underRepair;
-            pipeExists = true;
-        } else if (tag == "STATION") {
-            inFile >> station.name >> station.workshopecount
-                   >> station.workshopworkingcount >> station.stationClass;
-            stationExists = true;
-        }
-    }
+    inFile >> station.name >> station.workshopecount >> station.workshopworkingcount >> station.stationClass;
+    stationExists = true;
 
     inFile.close();
+}
+
+void printMenu() {
+    std::cout << "\n===== MENU =====\n";
+    std::cout << "1 - Add pipe\n";
+    std::cout << "2 - Add compressor station\n";
+    std::cout << "3 - Show all objects\n";
+    std::cout << "4 - Edit pipe (mark as under repair)\n";
+    std::cout << "5 - Edit compressor station (stop all workshops)\n";
+    std::cout << "6 - Save pipe to file\n";
+    std::cout << "7 - Save compressor station to file\n";
+    // std::cout << "8 - Load from file\n";
+    std::cout << "8 - Load pipe from file\n";
+    std::cout << "9 - Load station from file\n";
+    std::cout << "0 - Exit\n";
+    std::cout << "================\n";
+    std::cout << "Your choice: ";
 }
 
 int main() {
@@ -154,7 +229,7 @@ int main() {
 
     std::cout << "Hello, user!" << std::endl;
     while (true) {
-        std::cout << "Enter a number (or 0 to quit): ";
+        printMenu();
         int input;
         std::cin >> input;
 
@@ -166,8 +241,11 @@ int main() {
             case 3: printAllObjects(pipe, pipeExists, station, stationExists); break;
             case 4: redactPipe(pipe, pipeExists); break;
             case 5: redactCompressorStation(station, stationExists); break;
-            case 6: saveToFile(pipe, pipeExists, station, stationExists); break;
-            case 7: loadFromFile(pipe, pipeExists, station, stationExists); break;
+            case 6: savePipeToFile(pipe, pipeExists); break;
+            case 7: saveStationToFile(station, stationExists); break;
+            // case 8: loadFromFile(pipe, pipeExists, station, stationExists); break;
+            case 8: loadPipeFromFile(pipe, pipeExists); break;
+            case 9: loadStationFromFile(station, stationExists); break;
             default: std::cout << "Invalid input\n";
         }
     }
