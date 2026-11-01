@@ -57,23 +57,12 @@ void addCompressorStation(CompressorStation& station, bool& stationExists) {
     stationExists = true;
 }
 
-<<<<<<< HEAD
 void printPipe(const Pipe& pipe, bool pipeExists) {
     if (!pipeExists) {
         cout << "No pipe exists.\n";
         return;
-=======
-void showPipe(const Pipe& pipe, bool pipeExists) {
-    std::cout << "Pipes:" << std::endl;
-    if (pipeExists) {
-        std::cout << "Name: " << pipe.name << ", Length: " << pipe.length
-                  << ", Diameter: " << pipe.diameter
-                  << ", Under Repair: " << (pipe.underRepair ? "Yes" : "No") << std::endl;
->>>>>>> 3331bfe874441ae122f696cc963863c18352d748
     }
-}
 
-<<<<<<< HEAD
     cout << "Name: " << pipe.name
          << ", Length: " << pipe.length
          << ", Diameter: " << pipe.diameter
@@ -85,15 +74,6 @@ void printCS(const CompressorStation& station, bool stationExists) {
     if (!stationExists) {
         cout << "No compressor station exists.\n";
         return;
-=======
-void showCompressor(const CompressorStation& station, bool stationExists) {
-    std::cout << "Compressor Stations:" << std::endl;
-    if (stationExists) {
-        std::cout << "Name: " << station.name
-                  << ", Workshops: " << station.workshopecount
-                  << ", Working Workshops: " << station.workshopworkingcount
-                  << ", Class: " << station.stationClass << std::endl;
->>>>>>> 3331bfe874441ae122f696cc963863c18352d748
     }
 
     cout << "Name: " << station.name
@@ -108,7 +88,6 @@ void redactPipe(Pipe& pipe, bool pipeExists) {
         cout << "No pipe to redact.\n";
         return;
     }
-<<<<<<< HEAD
 
     cout << "Enter the name of the pipe to redact: ";
     string name;
@@ -119,26 +98,6 @@ void redactPipe(Pipe& pipe, bool pipeExists) {
     }
     else {
         cout << "Pipe not found.\n";
-=======
-
-    std::cout << "Enter pipe name: ";
-    std::cin >> pipe.name;
-
-    std::cout << "Enter pipe length: ";
-    std::cin >> pipe.length;
-
-    std::cout << "Enter pipe diameter: ";
-    std::cin >> pipe.diameter;
-
-    int i;
-    std::cout << "Enter under repair (1 or 0): ";
-    std::cin >> i;
-
-    if (i == 1 || i == 0) {
-        pipe.underRepair = (i == 1);
-    } else {
-        std::cout << "Invalid value. Under repair was not changed.\n";
->>>>>>> 3331bfe874441ae122f696cc963863c18352d748
     }
 }
 
@@ -147,7 +106,6 @@ void redactCompressorStation(CompressorStation& station, bool stationExists) {
         cout << "No compressor station to redact.\n";
         return;
     }
-<<<<<<< HEAD
 
     cout << "Enter the name of the compressor station to redact: ";
     string name;
@@ -179,26 +137,6 @@ void saveData(Pipe pipe, bool pipeExists,
               CompressorStation station, bool stationExists) {
     if (!pipeExists && !stationExists) {
         cout << "Nothing to save.\n";
-=======
-
-    std::cout << "Enter station name: ";
-    std::cin >> station.name;
-
-    std::cout << "Enter workshop count: ";
-    std::cin >> station.workshopecount;
-
-    std::cout << "Enter working workshop count: ";
-    std::cin >> station.workshopworkingcount;
-
-    std::cout << "Enter station class: ";
-    std::cin >> station.stationClass;
-}
-
-void savePipeToFile(const Pipe& pipe, bool pipeExists) {
-    std::ofstream outfile("pipe.txt");
-    if (!outfile) {
-        std::cerr << "Error opening file for writing." << std::endl;
->>>>>>> 3331bfe874441ae122f696cc963863c18352d748
         return;
     }
 
@@ -225,17 +163,10 @@ void savePipeToFile(const Pipe& pipe, bool pipeExists) {
     cout << "\nData saved.\n";
 }
 
-<<<<<<< HEAD
 void savePipeToFile(Pipe pipe, bool pipeExists,
                     CompressorStation station, bool stationExists) {
     if (!pipeExists) {
         cout << "No pipe to save.\n";
-=======
-void loadPipeFromFile(Pipe& pipe, bool& pipeExists) {
-    std::ifstream inFile("pipe.txt");
-    if (!inFile) {
-        std::cerr << "Error opening file for reading." << std::endl;
->>>>>>> 3331bfe874441ae122f696cc963863c18352d748
         return;
     }
 
@@ -371,7 +302,6 @@ void loadStationFromFile(CompressorStation& station, bool& stationExists) {
 }
 
 void printMenu() {
-<<<<<<< HEAD
     cout << "\n===== MENU =====\n";
     cout << "1 - Add pipe\n";
     cout << "2 - Add compressor station\n";
@@ -386,23 +316,6 @@ void printMenu() {
     cout << "0 - Exit\n";
     cout << "================\n";
     cout << "Your choice: ";
-=======
-    std::cout << "\n===== MENU =====\n";
-    std::cout << "1 - Add pipe\n";
-    std::cout << "2 - Add compressor station\n";
-    std::cout << "3 - Show Pipe objects\n";
-    std::cout << "4 - Show Compressor objects\n";
-    std::cout << "5 - Edit pipe (mark as under repair)\n";
-    std::cout << "6 - Edit compressor station (stop all workshops)\n";
-    std::cout << "7 - Save pipe to file\n";
-    std::cout << "8 - Save compressor station to file\n";
-    // std::cout << "8 - Load from file\n";
-    std::cout << "9 - Load pipe from file\n";
-    std::cout << "10 - Load station from file\n";
-    std::cout << "0 - Exit\n";
-    std::cout << "================\n";
-    std::cout << "Your choice: ";
->>>>>>> 3331bfe874441ae122f696cc963863c18352d748
 }
 
 int main() {
@@ -425,7 +338,6 @@ int main() {
         switch (input) {
             case 1: addPipe(pipe, pipeExists); break;
             case 2: addCompressorStation(station, stationExists); break;
-<<<<<<< HEAD
             case 3: printPipe(pipe, pipeExists); break;
             case 4: printCS(station, stationExists); break;
             case 5: redactPipe(pipe, pipeExists); break;
@@ -435,17 +347,6 @@ int main() {
             case 9: loadPipeFromFile(pipe, pipeExists); break;
             case 10: loadStationFromFile(station, stationExists); break;
             default: cout << "Invalid input\n";
-=======
-            case 3: showPipe(pipe, pipeExists); break;
-            case 4: showCompressor(station, stationExists); break;
-            case 5: redactPipe(pipe, pipeExists); break;
-            case 6: redactCompressorStation(station, stationExists); break;
-            case 7: savePipeToFile(pipe, pipeExists); break;
-            case 8: saveStationToFile(station, stationExists); break;
-            case 9: loadPipeFromFile(pipe, pipeExists); break;
-            case 10: loadStationFromFile(station, stationExists); break;
-            default: std::cout << "Invalid input\n";
->>>>>>> 3331bfe874441ae122f696cc963863c18352d748
         }
     }
 
